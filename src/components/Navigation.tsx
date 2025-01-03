@@ -1,135 +1,161 @@
 import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import Search from './Search';
+import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '../context/ThemeContext';
 
 const Navigation: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const { theme } = useTheme();
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const navLinks = [
+    { path: '/', label: 'Home' },
+    { path: '/about', label: 'About' },
+    { path: '/services', label: 'Services' },
+    { path: '/case-studies', label: 'Case Studies' },
+    { path: '/resources', label: 'Resources' },
+    { path: '/pricing', label: 'Pricing' },
+    { path: '/partners', label: 'Partners' },
+    { path: '/careers', label: 'Careers' },
+    { path: '/contact', label: 'Contact' },
+  ];
+
+  const closeMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
 
   return (
-    <nav className="bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex">
-            <Link to="/" className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold text-primary">ACEDEMAND</span>
+    <header className={`fixed w-full top-0 z-50 ${
+      theme === 'dark' ? 'bg-dark-surface' : 'bg-white'
+    } shadow-md`}>
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <Link to="/" className="flex items-center space-x-2" onClick={closeMenu}>
+              <div className="text-2xl">☁️ ☸️ 🐳 🐧</div>
+              <span className={`text-xl font-semibold ${
+                theme === 'dark' ? 'text-dark-primary' : 'text-primary'
+              }`}>
+                ACEDEMAND
+              </span>
             </Link>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link to="/about" className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-primary">
-                About
-              </Link>
-              <Link to="/services" className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-primary">
-                Services
-              </Link>
-              <Link to="/products" className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-primary">
-                Products
-              </Link>
-              <Link to="/careers" className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-primary">
-                Careers
-              </Link>
-              <Link to="/contact" className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-primary">
-                Contact
-              </Link>
-            </div>
           </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
-            <Search />
-            <Link
-              to="/admin/analytics"
-              className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-500 hover:text-gray-700"
-            >
-              <svg
-                className="w-5 h-5 mr-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex space-x-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  location.pathname === link.path
+                    ? theme === 'dark'
+                      ? 'text-dark-primary bg-dark-primary/10'
+                      : 'text-primary bg-primary/10'
+                    : theme === 'dark'
+                    ? 'text-dark-text hover:text-dark-primary hover:bg-dark-surface'
+                    : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+                }`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                />
-              </svg>
-              Analytics
-            </Link>
+                {link.label}
+              </Link>
+            ))}
           </div>
-          <div className="flex items-center sm:hidden">
+
+          {/* Mobile menu button */}
+          <div className="lg:hidden">
             <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+              onClick={toggleMobileMenu}
+              className={`inline-flex items-center justify-center p-2 rounded-md ${
+                theme === 'dark'
+                  ? 'text-dark-text hover:text-dark-primary hover:bg-dark-surface'
+                  : 'text-gray-700 hover:text-primary hover:bg-gray-100'
+              } focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary transition-colors duration-200`}
+              aria-expanded="false"
             >
               <span className="sr-only">Open main menu</span>
-              {!isOpen ? (
-                <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              ) : (
-                <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              )}
+              <motion.div
+                animate={isMobileMenuOpen ? "open" : "closed"}
+                className="w-6 h-6 flex flex-col justify-center items-center"
+              >
+                <motion.span
+                  variants={{
+                    closed: { rotate: 0, y: 0 },
+                    open: { rotate: 45, y: 6 },
+                  }}
+                  className="w-6 h-0.5 bg-current transform transition-transform duration-200 ease-in-out"
+                />
+                <motion.span
+                  variants={{
+                    closed: { opacity: 1 },
+                    open: { opacity: 0 },
+                  }}
+                  className="w-6 h-0.5 bg-current my-1.5"
+                />
+                <motion.span
+                  variants={{
+                    closed: { rotate: 0, y: 0 },
+                    open: { rotate: -45, y: -6 },
+                  }}
+                  className="w-6 h-0.5 bg-current transform transition-transform duration-200 ease-in-out"
+                />
+              </motion.div>
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Mobile menu */}
-      <motion.div
-        className={`sm:hidden ${isOpen ? 'block' : 'hidden'}`}
-        initial={false}
-        animate={{ height: isOpen ? 'auto' : 0 }}
-        transition={{ duration: 0.2 }}
-      >
-        <div className="pt-2 pb-3 space-y-1">
-          <Link
-            to="/about"
-            className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsOpen(false)}
-          >
-            About
-          </Link>
-          <Link
-            to="/services"
-            className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsOpen(false)}
-          >
-            Services
-          </Link>
-          <Link
-            to="/products"
-            className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsOpen(false)}
-          >
-            Products
-          </Link>
-          <Link
-            to="/careers"
-            className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsOpen(false)}
-          >
-            Careers
-          </Link>
-          <Link
-            to="/contact"
-            className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsOpen(false)}
-          >
-            Contact
-          </Link>
-          <Link
-            to="/admin/analytics"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-800 hover:border-gray-300"
-            onClick={() => setIsOpen(false)}
-          >
-            Analytics
-          </Link>
-          <div className="px-3 py-2">
-            <Search />
-          </div>
-        </div>
-      </motion.div>
-    </nav>
+        {/* Mobile Navigation */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="lg:hidden overflow-hidden"
+            >
+              <div className="px-2 pt-2 pb-3 space-y-1">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+                      location.pathname === link.path
+                        ? theme === 'dark'
+                          ? 'text-dark-primary bg-dark-primary/10'
+                          : 'text-primary bg-primary/10'
+                        : theme === 'dark'
+                        ? 'text-dark-text hover:text-dark-primary hover:bg-dark-surface'
+                        : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+                    }`}
+                    onClick={closeMenu}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+
+      {/* Mobile menu backdrop */}
+      {isMobileMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 bg-black bg-opacity-25 lg:hidden z-40"
+          onClick={closeMenu}
+        />
+      )}
+    </header>
   );
 };
 

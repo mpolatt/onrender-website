@@ -1,76 +1,74 @@
-# AceDemand
+# ACEDEMAND IT Consulting Website
 
-A React TypeScript application built with Vite and styled with Tailwind CSS.
+A modern, responsive website built with React, TypeScript, and Tailwind CSS for ACEDEMAND IT Consulting services.
 
-## Prerequisites
+## Features
 
-Before running this project, make sure you have the following installed:
-- Node.js (v18 or higher recommended)
-- npm (comes with Node.js)
+- 🚀 Modern UI/UX with Tailwind CSS
+- 💻 Fully Responsive Design
+- ⚡ Built with Vite + React + TypeScript
+- 🎨 Smooth Animations with Framer Motion
+- 📱 Mobile-First Approach
+- 🔍 SEO Optimized
+- 🌐 Multiple Service Pages
+- 📊 Case Studies Showcase
+- 💼 Career Opportunities Section
+- 📝 Resource Center
 
-## Installation
+## Getting Started
 
-1. Clone the repository:
+### Prerequisites
+
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
 ```bash
-git clone [your-repository-url]
-cd acedemand
+git clone [repository-url]
 ```
 
-2. Install dependencies:
+2. Install dependencies
 ```bash
 npm install
 ```
 
-## Development
-
-To run the development server:
+3. Start the development server
 ```bash
 npm run dev
 ```
-This will start the development server at `http://localhost:5173` (or another available port if 5173 is in use).
 
-## Building for Production
-
-To create a production build:
+4. Build for production
 ```bash
 npm run build
 ```
 
-The built files will be in the `dist` directory.
+## Tech Stack
 
-## Preview Production Build
-
-To preview the production build locally:
-```bash
-npm run preview
-```
-
-## Linting
-
-To run the linter:
-```bash
-npm run lint
-```
+- React
+- TypeScript
+- Tailwind CSS
+- Vite
+- Framer Motion
+- React Router
+- React Helmet Async
 
 ## Project Structure
 
-- `/src` - Source code
-- `/public` - Static assets
-- `/dist` - Production build output (generated)
+```
+src/
+├── components/     # Reusable components
+├── pages/         # Page components
+├── services/      # Service pages
+├── assets/        # Static assets
+└── styles/        # Global styles
+```
 
-## Technologies Used
+## Contributing
 
-- React 18
-- TypeScript
-- Vite
-- Tailwind CSS
-- React Router DOM
-- Framer Motion
-- Recharts
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Scripts
+## License
 
-- `npm run dev` - Start development server
-- `npm run build` - Create production build
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+This project is licensed under the MIT License.

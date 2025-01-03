@@ -1,34 +1,37 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
 import { HelmetProvider } from 'react-helmet-async';
+import { ThemeProvider } from './context/ThemeContext';
 import Layout from './components/Layout';
-import Home from './pages/Home';
-import About from './pages/About';
-import Services from './pages/Services';
-import Products from './pages/Products';
-import Careers from './pages/Careers';
-import Contact from './pages/Contact';
-import Login from './pages/Login';
-import Blog from './pages/Blog';
+import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
-import CloudMigration from './pages/services/CloudMigration';
-import InfrastructureManagement from './pages/services/InfrastructureManagement';
-import DataAnalytics from './pages/services/DataAnalytics';
-import ErrorBoundary from './components/ErrorBoundary';
-import CaseStudies from './pages/CaseStudies';
-import Resources from './pages/Resources';
-import Pricing from './pages/Pricing';
-import Partners from './pages/Partners';
+import LoadingSpinner from './components/LoadingSpinner';
 
-const App = () => {
+// Lazy load pages
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Services = lazy(() => import('./pages/Services'));
+const CloudMigration = lazy(() => import('./pages/services/CloudMigration'));
+const InfrastructureManagement = lazy(() => import('./pages/services/InfrastructureManagement'));
+const DataAnalytics = lazy(() => import('./pages/services/DataAnalytics'));
+const CloudSecurity = lazy(() => import('./pages/services/CloudSecurity'));
+const CaseStudies = lazy(() => import('./pages/CaseStudies'));
+const Resources = lazy(() => import('./pages/Resources'));
+const Pricing = lazy(() => import('./pages/Pricing'));
+const Partners = lazy(() => import('./pages/Partners'));
+const Careers = lazy(() => import('./pages/Careers'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Blog = lazy(() => import('./pages/Blog'));
+const Products = lazy(() => import('./pages/Products'));
+
+function App() {
   return (
-    <ErrorBoundary>
-      <HelmetProvider>
+    <HelmetProvider>
+      <ThemeProvider>
         <Router>
           <ScrollToTop />
-          <AnimatePresence mode="wait">
+          <Suspense fallback={<LoadingSpinner />}>
             <Routes>
-              <Route path="/login" element={<Login />} />
               <Route element={<Layout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
@@ -36,21 +39,23 @@ const App = () => {
                 <Route path="/services/cloud-migration" element={<CloudMigration />} />
                 <Route path="/services/infrastructure-management" element={<InfrastructureManagement />} />
                 <Route path="/services/data-analytics" element={<DataAnalytics />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/careers" element={<Careers />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/blog" element={<Blog />} />
+                <Route path="/services/cloud-security" element={<CloudSecurity />} />
                 <Route path="/case-studies" element={<CaseStudies />} />
                 <Route path="/resources" element={<Resources />} />
                 <Route path="/pricing" element={<Pricing />} />
                 <Route path="/partners" element={<Partners />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/products" element={<Products />} />
               </Route>
             </Routes>
-          </AnimatePresence>
+          </Suspense>
+          <ThemeToggle />
         </Router>
-      </HelmetProvider>
-    </ErrorBoundary>
+      </ThemeProvider>
+    </HelmetProvider>
   );
-};
+}
 
 export default App; 
