@@ -13,6 +13,7 @@
     "@types/node": "^22.10.5",
     "@types/react-router-dom": "^5.3.3",
     "@types/recharts": "^1.8.29",
+    "axios": "^1.7.9",
     "date-fns": "^4.1.0",
     "esbuild": "^0.24.2",
     "framer-motion": "^11.15.0",
