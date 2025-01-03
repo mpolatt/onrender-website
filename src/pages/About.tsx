@@ -230,7 +230,7 @@ const About: React.FC = () => {
         <FadeIn delay={0.3}>
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Our Partnerships & Specializations</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {partnerBadges.map((badge, index) => (
+            {partnerBadges.map((badge) => (
               <HoverScale key={badge.title}>
                 <div className="bg-white rounded-xl shadow-lg overflow-hidden h-full">
                   <div className="aspect-w-1 aspect-h-1 bg-gradient-to-br from-blue-50 to-gray-50 p-6">
@@ -294,7 +294,7 @@ const About: React.FC = () => {
       <FadeIn delay={0.5}>
         <div className="max-w-7xl mx-auto mb-16">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {companyStats.map((stat, index) => (
+            {companyStats.map((stat) => (
               <HoverScale key={stat.label}>
                 <div className="bg-white rounded-xl shadow-lg p-6 text-center">
                   <div className="text-4xl mb-2">{stat.icon}</div>

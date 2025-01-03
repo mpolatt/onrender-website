@@ -87,6 +87,7 @@ const Blog: React.FC = () => {
         description="Stay updated with the latest insights on cloud computing, DevOps practices, and digital transformation strategies."
         keywords="cloud computing blog, DevOps insights, digital transformation tips, cloud migration guides, tech blog"
         type="blog"
+        schema={structuredBlogData}
       />
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-16">
         <div className="max-w-7xl mx-auto px-4">

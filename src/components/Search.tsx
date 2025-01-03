@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { analyticsService, type SearchAnalytics } from '../services/analytics';
+import { analyticsService } from '../services/analytics';
 
 interface SearchResult {
   title: string;

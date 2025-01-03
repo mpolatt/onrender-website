@@ -1,3 +1,4 @@
+# Global rules
 User-agent: *
 Allow: /
 
@@ -8,6 +9,28 @@ Sitemap: https://acedemand.com/sitemap.xml
 Disallow: /admin/
 Disallow: /private/
 Disallow: /api/
+Disallow: /internal/
+Disallow: /temp/
+Disallow: /draft/
+Disallow: /*.json$
+Disallow: /*?*
+
+# Allow Googlebot specific access
+User-agent: Googlebot
+Allow: /*.js$
+Allow: /*.css$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.gif$
+Allow: /*.svg$
+
+# Allow Googlebot-Image specific access
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.gif$
+Allow: /*.svg$
 
 # Crawl-delay
-Crawl-delay: 10 
+Crawl-delay: 1 
