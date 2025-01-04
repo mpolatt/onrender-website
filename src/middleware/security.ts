@@ -1,86 +1,104 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import xss from 'xss-clean';
 import hpp from 'hpp';
 import cors from 'cors';
+import crypto from 'crypto';
 
-// Rate limiting
+// Rate limiting configuration
 export const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.'
+  max: 100 // limit each IP to 100 requests per windowMs
 });
 
-// Security headers middleware
+// Security headers using Helmet
 export const securityHeaders = helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://www.google-analytics.com'],
-      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", 'data:', 'https:'],
-      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-      connectSrc: ["'self'", 'https://www.google-analytics.com'],
-      frameSrc: ["'none'"],
+      connectSrc: ["'self'", 'https://api.acedemand.com'],
+      fontSrc: ["'self'", 'https:', 'data:'],
       objectSrc: ["'none'"],
-      upgradeInsecureRequests: []
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"]
     }
   },
-  crossOriginEmbedderPolicy: false
+  xssFilter: true,
+  noSniff: true,
+  referrerPolicy: { policy: 'same-origin' }
 });
 
 // CORS configuration
 export const corsOptions = {
-  origin: process.env.VITE_ALLOWED_ORIGINS?.split(',') || ['http://localhost:5173'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: ['https://acedemand.com', 'https://api.acedemand.com'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
   credentials: true,
-  maxAge: 86400 // 24 hours
+  maxAge: 600 // 10 minutes
 };
 
-// XSS Protection middleware
+export const corsMiddleware = cors(corsOptions);
+
+// XSS Protection
 export const xssProtection = xss();
 
-// HPP (HTTP Parameter Pollution) protection
+// HPP Protection
 export const hppProtection = hpp();
 
 // Input sanitization middleware
-export const sanitizeInput = (req: Request, res: Response, next: NextFunction) => {
+export const sanitizeInput = (req: Request, _res: Response, next: NextFunction) => {
   if (req.body) {
-    Object.keys(req.body).forEach(key => {
+    for (let key in req.body) {
       if (typeof req.body[key] === 'string') {
-        req.body[key] = req.body[key].trim().replace(/[<>]/g, '');
+        // Using a simple sanitization approach
+        req.body[key] = req.body[key]
+          .trim()
+          .replace(/[<>]/g, '') // Remove < and > characters
+          .replace(/&/g, '&amp;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#x27;')
+          .replace(/\//g, '&#x2F;');
       }
-    });
+    }
   }
   next();
 };
 
-// CSRF Token middleware
+// CSRF Protection
+const generateToken = () => crypto.randomBytes(32).toString('hex');
+
 export const csrfProtection = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers['x-csrf-token'];
-  const storedToken = req.session?.csrfToken;
+  if (req.method === 'GET') {
+    const token = generateToken();
+    req.session.csrfToken = token;
+    res.setHeader('X-CSRF-Token', token);
+    next();
+  } else {
+    const token = req.headers['x-csrf-token'];
+    const storedToken = req.session?.csrfToken;
 
-  if (!token || token !== storedToken) {
-    return res.status(403).json({ message: 'Invalid CSRF token' });
+    if (!token || !storedToken || token !== storedToken) {
+      return res.status(403).json({ error: 'Invalid CSRF token' });
+    }
+    next();
   }
-
-  next();
 };
 
 // Generate CSRF Token
-export const generateCsrfToken = (req: Request, res: Response, next: NextFunction) => {
-  const token = Math.random().toString(36).substring(2);
+export const generateCsrfToken = (req: Request, _res: Response, next: NextFunction) => {
+  const token = generateToken();
   req.session.csrfToken = token;
-  res.locals.csrfToken = token;
   next();
 };
 
 // Security middleware composition
 export const securityMiddleware = [
   securityHeaders,
-  cors(corsOptions),
+  corsMiddleware,
   xssProtection,
   hppProtection,
   sanitizeInput,
