@@ -17,7 +17,6 @@ const DataAnalytics = lazy(() => import('./pages/services/DataAnalytics'));
 const CloudSecurity = lazy(() => import('./pages/services/CloudSecurity'));
 const CaseStudies = lazy(() => import('./pages/CaseStudies'));
 const Resources = lazy(() => import('./pages/Resources'));
-const Pricing = lazy(() => import('./pages/Pricing'));
 const Partners = lazy(() => import('./pages/Partners'));
 const Careers = lazy(() => import('./pages/Careers'));
 const Contact = lazy(() => import('./pages/Contact'));
@@ -42,12 +41,14 @@ function App() {
                 <Route path="/services/cloud-security" element={<CloudSecurity />} />
                 <Route path="/case-studies" element={<CaseStudies />} />
                 <Route path="/resources" element={<Resources />} />
-                <Route path="/pricing" element={<Pricing />} />
                 <Route path="/partners" element={<Partners />} />
                 <Route path="/careers" element={<Careers />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/products" element={<Products />} />
+                <Route path="/documentation" element={<Resources />} />
+                <Route path="/support" element={<Contact />} />
+                <Route path="/faq" element={<Resources />} />
               </Route>
             </Routes>
           </Suspense>
